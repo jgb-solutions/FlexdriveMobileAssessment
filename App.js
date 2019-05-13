@@ -60,7 +60,10 @@ export default class App extends Component {
               }
             `
         }).then(({data}) => {
-            this.setState({ vehicles: data.vehicles.edges })
+            this.setState({
+                vehicles: data.vehicles.edges,
+                totalCount: data.vehicles.totalCount
+            })
         })
         .catch(error => {
             console.error(error)
@@ -83,7 +86,7 @@ export default class App extends Component {
                         <Icon name='arrow-back' />
                     </View>
                     <View>
-                        <Text style={{fontSize: 14, textTransform: 'uppercase', fontWeight: 'bold', textAlign: 'center'}}>483 CARS FOUND</Text>
+                        <Text style={{fontSize: 14, textTransform: 'uppercase', fontWeight: 'bold', textAlign: 'center'}}>{this.state.totalCount} CARS FOUND</Text>
                         <Text style={{fontSize: 11, textTransform: 'uppercase'}}><Icon name='send'  style={{ fontSize: 13, fontWeight: 'bold' }} /> ATLANTA, GA</Text>
                     </View>
                     <View>
