@@ -59,11 +59,13 @@ export default class App extends Component {
                     }
               }
             `
-        }).then(({ vehicles }) => {
-            alert(data);
-            this.setState({ vehicles })
+        }).then(({data}) => {
+            this.setState({ vehicles: data.vehicles.edges })
         })
-        .catch(error => console.error(eror));
+        .catch(error => {
+            console.error(error)
+            alert('error');
+        });
     }
 
     render() {
@@ -105,31 +107,34 @@ export default class App extends Component {
                     <Icon name='close-circle-outline' style={{ fontSize: 13, color: 'white', fontWeight: 'bold' }}/>
                 </View>
                 <Content>
-                <Card>
-                    <CardItem cardBody>
-                        <Image
-                            source={{uri: 'https://f1-prod-assets.s3.amazonaws.com/f910b73b-f8a3-4e21-968e-acacd644ef25/images/IMG_4317/IMG_4317-2017-07-06-092338-full.jpg' }}
-                            style={{height: 200, width: null, flex: 1}}
-                        />
-                    </CardItem>
-                    <CardItem style={{ flexDirection: 'row', paddingVertical: 20, marginVertical: 10}}>
-                      <View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15}}>2017 BMW x6 m package</Text>
-                        <Text style={{ fontSize: 10, color: 'grey' }}>at Jims Ellis BMW of North Gwinnett</Text>
-                      </View>
-                      <View style={[styles.purpleBox, {
-                          position: 'absolute', right: 10,
-                          width: 100,
-                          height: 50,
-                          borderRadius: 8,
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                          }]}>
-                            <Text style={{ color: 'white', fontWeight: 'bold'}}>$494</Text>
-                            <Text style={{ color: 'white', fontSize: 11}}>for 7 days</Text>
-                      </View>
-                    </CardItem>
-                  </Card>
+                    {this.state.vehicles.map((vehicle, index) => (
+                        <Card key={index}>
+                        <CardItem cardBody>
+                            <Image
+                                source={{uri: vehicle.node.featureImage.url }}
+                                style={{height: 200, width: null, flex: 1}}
+                            />
+                        </CardItem>
+                        <CardItem style={{ flexDirection: 'row', paddingVertical: 20, marginVertical: 10}}>
+                            <View>
+                            <Text style={{ fontWeight: 'bold', fontSize: 15}}>{vehicle.node.year} {vehicle.node.model}</Text>
+                            <Text style={{ fontSize: 10, color: 'grey' }}>at {vehicle.node.location.name}</Text>
+                            </View>
+                            <View style={[styles.purpleBox, {
+                                position: 'absolute', right: 10,
+                                width: 100,
+                                height: 50,
+                                borderRadius: 8,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                                }]}>
+                                <Text style={{ color: 'white', fontWeight: 'bold'}}>${vehicle.node.pricing[0].value}</Text>
+                                <Text style={{ color: 'white', fontSize: 11}}>for {vehicle.node.pricing[0].duration} days</Text>
+                            </View>
+                        </CardItem>
+                        </Card>
+                    ))}
+
                 </Content>
             </Container>
         )
